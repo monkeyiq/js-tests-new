@@ -15,29 +15,29 @@
  *  - Have no lint errors
  */
 
-// import Promise from 'bluebird';
+//import Promise from 'bluebird';
+const { expect } = require('chai');
 
 // This function merely waits 250ms and completes with: [ payload1, payload2 ]
 module.exports = function (getPromisedPayload, nodeStyleCallback, done) {
-  const results = [];
-
-  setTimeout(function () {
-    getPromisedPayload().then(function (payload) {
-      results.push(payload);
-
-      nodeStyleCallback(function (err, unresolvedPromisePayload) {
-        if (err) return done(err);
-
-        unresolvedPromisePayload.then(function (payload2) {
-          results.push(payload2);
-
-          done(null, results);
-        }).catch(function (_err) {
-          done(_err);
-        });
-      });
-    }).catch(function (err) {
-      done(err);
+    
+    return new Promise((resolve, reject) => {
+	try {
+	    setTimeout(function () {
+		nodeStyleCallback(async function (err, unresolvedPromisePayload) {
+		    if (err) { console.log('native func err'); return reject(err); }
+		    try {
+		    	var tasks   = [ getPromisedPayload(), unresolvedPromisePayload ];
+		    	var results = await Promise.all( tasks );
+		    	resolve( results );
+		    } catch(e) {
+		    	reject(e);
+		    }
+		});
+	    }, 250 );
+	} catch(e) {
+	    reject(e);
+	}
     });
-  }, 250);
+
 };

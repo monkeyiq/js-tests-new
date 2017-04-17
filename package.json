@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "test": "mocha --harmony"
+    "test": "mocha --harmony --harmony_async_await"
   },
   "keywords": [],
   "author": "",

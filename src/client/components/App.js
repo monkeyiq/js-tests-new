@@ -6,18 +6,23 @@
  */
 
 import React from 'react';
+import Store from './Store';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      brands: [],
+	brands: [],
+	stores: []
     };
   }
   componentDidMount() {
-    window.fetch('/api/brands')
-      .then(res => res.json())
-      .then(brands => this.setState({ brands }));
+      window.fetch('/api/brands')
+	  .then(res => res.json())
+	  .then(brands => this.setState({ brands: brands }));
+      window.fetch('/api/stores')
+      	  .then(res => res.json())
+      	  .then(stores => this.setState({ stores: stores }));
   }
   render() {
     return (
@@ -29,6 +34,11 @@ class App extends React.Component {
           ))}
         </ul>
         <h2>Stores</h2>
+            <ul>
+            {this.state.stores.map(store => (
+		<Store id={store.id} name={store.name} /> 
+          ))}
+        </ul>
         {/* List the stores here. */}
       </div>
     );
